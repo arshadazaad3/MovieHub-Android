@@ -7,7 +7,7 @@ import {
 import Carousel from 'react-native-anchor-carousel'
 import { FontAwesome5, Feather, MaterialIcons } from '@expo/vector-icons'
 
-const App = () => {
+const Home = () => {
   
   const [background, setBackground] = useState({
     uri: require('../components/images/moviePosters/godzilla.jpg'),
@@ -316,4 +316,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default App
+export default Home
