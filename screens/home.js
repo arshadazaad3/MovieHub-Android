@@ -7,15 +7,23 @@ import {
 import Carousel from 'react-native-anchor-carousel'
 import { FontAwesome5, Feather, MaterialIcons } from '@expo/vector-icons'
 
-
+var hello = "hello"
 const App = () => {
 
 
   const [background, setBackground] = useState({
-    uri: require('../components/images/moviePosters/endgame.jpg'),
-    name: 'Avengers: End Game',
+    uri: require('../components/images/moviePosters/godzilla.jpg'),
+    name: 'Godzilla : King of Monsters',
     stat: '2019 . Action/Sci-fi . 3h 2m',
-    desc: 'After Thanos, wipes the entire Universe'
+    desc: '',
+    link: 'www.123'
+  })
+
+  const [youTubeVideo, setyouTubeVideo] = useState({
+    url: require('../components/images/moviePosters/godzilla.jpg'),
+    name: 'Godzilla : King of Monsters',
+    link: 'www',
+
   })
 
   const [list, setList] = useState([
@@ -29,8 +37,8 @@ const App = () => {
       image: require('../components/images/moviePosters/godzilla.jpg'),
       title: 'Gozilla : King of Monsters',
       released: '2019 ',
-      desc: 'After Thanos, wipes the entire Universe',
-      key: '1'
+      desc: '',
+      link: 'www.123'
     },
 
     {
@@ -38,7 +46,7 @@ const App = () => {
       title: 'John Wick Chapter 3 - Parabellum',
       released: '2019 ',
       desc: 'After Thanos, wipes the entire Universe',
-      key: '1'
+      link: 'www.124'
     },
 
     {
@@ -46,12 +54,27 @@ const App = () => {
       title: 'Hobbs & Shaw',
       released: '2019 ',
       desc: 'After Thanos, wipes the entire Universe',
-      key: '1'
+      link: ''
     }
   ]);
 
   const carouselRef = useRef(null)
   const { width, height } = Dimensions.get('window');
+
+  const onScrollEndHanler = (item) => {
+    setBackground({
+      uri: item.image,
+      name: item.title,
+      stat: item.released,
+      desc: item.desc,
+      link: item.link
+
+    })
+  }
+
+  const downloadMovie = (link) => {
+    console.log(link)
+  }
 
   const renderItem = ({ item, index }) => {
     return (
@@ -63,7 +86,8 @@ const App = () => {
               uri: item.image,
               name: item.title,
               stat: item.released,
-              desc: item.desc
+              desc: item.desc,
+              link: item.link
             })
           }}
         >
@@ -104,16 +128,20 @@ const App = () => {
                 seperatorWidth={0}
                 ref={carouselRef}
                 inActiveOpacity={0.4}
+                onScrollEnd={(item) => onScrollEndHanler(item)}
               />
             </View>
 
             <View style={styles.movieInfoContainer}>
-              <View style={{ justifyContent: "center" }}>
+              <View style={{ justifyContent: "center", maxWidth: '80%' }}>
                 <Text style={styles.movieName}>{background.name}</Text>
                 <Text style={styles.movieStat}>{background.stat}</Text>
               </View>
-              <TouchableOpacity style={styles.playIconContainer}>
-                <FontAwesome5 name='play' size={22} color="#02ad94" style={{ marginLeft: 4 }} />
+              <TouchableOpacity
+                style={styles.downloadIconContainer}
+                onPress={() => downloadMovie(background.link)}
+              >
+                <MaterialIcons name='cloud-download' size={22} color="#02ad94" />
               </TouchableOpacity>
             </View>
             <View style={{ paddingHorizontal: 14, marginTop: 14 }}>
@@ -124,17 +152,20 @@ const App = () => {
       </View>
 
       <View style={{ marginHorizontal: 14 }}>
-        <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginBottom: 24 , marginTop:20}}>
-          Continue Watching
+        <View style={styles.trendingContainer}>
+          <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginBottom: 24, marginTop: 20 }}>
+            Trending
         </Text>
+          <MaterialIcons name='trending-up' size={27} color="#02ad94" style={{ top: 22, left: 10 }} />
+        </View>
 
         <ImageBackground
           source={require('../components/images/movies/mutantsbig.jpg')}
           style={{ height: 250, width: '100%', backgroundColor: '#000' }}
         >
-          <Text style={{ color: 'white', padding: 14 }}>The New Mutants</Text>
-          <TouchableOpacity style={{ ...styles.playIconContainer, position: 'absolute', top: '40%', right: '40%' }}>
-            <FontAwesome5 name='play' size={22} color="#02ad94" style={{ marginLeft: 4 }} />
+          {/* <Text style={{ color: 'white', padding: 8 }}>{youTubeVideo.name}</Text> */}
+          <TouchableOpacity style={{ ...styles.downloadIconContainer, position: 'absolute', top: '40%', right: '40%' }}>
+            <MaterialIcons name='play-arrow' size={22} color="#02ad94" />
           </TouchableOpacity>
         </ImageBackground>
         <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
@@ -207,6 +238,13 @@ const styles = StyleSheet.create({
     right: 20,
     top: 14
   },
+  trendingContainer: {
+    // alignSelf: "center",
+    flexDirection: 'row',
+    // height: 40,
+    paddingTop: 3,
+    // backgroundColor: 'green',
+  },
 
   carouselContainerView: {
     width: '100%',
@@ -262,16 +300,18 @@ const styles = StyleSheet.create({
     opacity: 0.8
   },
 
-  playIconContainer: {
+  downloadIconContainer: {
+    marginTop: 15,
     backgroundColor: '#212121',
-    padding: 18,
+    padding: 10,
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 10,
-    borderWidth: 4,
+    height: 47,
+    borderWidth: 2,
     borderColor: "rgba(2,173,148,0.2)",
-    marginBottom: 14
+    marginBottom: 14,
 
   }
 

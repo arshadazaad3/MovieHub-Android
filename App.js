@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
 //Screens
 import Home from './screens/home'
@@ -38,7 +38,7 @@ export default function App() {
           options={{
             tabBarLabel: '',
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name='camera-metering-spot' color={color} size={28} />
+              <MaterialIcons name='subject' color={color} size={28} />
             )
           }}
         />
