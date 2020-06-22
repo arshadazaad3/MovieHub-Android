@@ -85,15 +85,6 @@ const App = () => {
             style={styles.imageBG}
             blurRadius={7}
           >
-            <View style={styles.searchBoxContainer}>
-              <TextInput
-                placeholder="Seach for Movies"
-                placeholderTextColor="#666"
-                style={styles.searchBox}
-              />
-              <Feather name='search' size={22} color='#666' style={styles.searchBoxIcon} />
-            </View>
-
             <Text style={{
               fontSize: 24,
               color: 'white',
@@ -185,7 +176,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     height: 720,
     paddingHorizontal: 14,
-
   },
 
   imageBG: {
