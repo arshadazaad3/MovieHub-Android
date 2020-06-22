@@ -13,7 +13,7 @@ const App = () => {
     uri: require('../components/images/moviePosters/godzilla.jpg'),
     name: 'Godzilla : King of Monsters',
     stat: '2019 . Action/Sci-fi . 3h 2m',
-    desc: '',
+    desc: 'The members of Monarch, an crypto-zoological organisation, must rely on the Godzilla and Mothra to defeat King Ghidorah and Rodan, after the former awakens other dormant Titans to destroy the world.',
     link: 'www.123'
   })
 
@@ -34,8 +34,8 @@ const App = () => {
     {
       image: require('../components/images/moviePosters/godzilla.jpg'),
       title: 'Gozilla : King of Monsters',
-      released: '2019 ',
-      desc: '',
+      released: '2019 . Action/Sci-fi . 3h 2m',
+      desc: 'The members of Monarch, an crypto-zoological organisation, must rely on the Godzilla and Mothra to defeat King Ghidorah and Rodan, after the former awakens other dormant Titans to destroy the world.',
       link: 'www.123'
     },
 
