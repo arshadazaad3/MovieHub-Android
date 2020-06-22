@@ -14,7 +14,6 @@ export default function profile() {
               </Text>
         </Text>
       </View>
-
     </View>
   );
 }

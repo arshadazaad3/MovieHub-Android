@@ -7,10 +7,8 @@ import {
 import Carousel from 'react-native-anchor-carousel'
 import { FontAwesome5, Feather, MaterialIcons } from '@expo/vector-icons'
 
-var hello = "hello"
 const App = () => {
-
-
+  
   const [background, setBackground] = useState({
     uri: require('../components/images/moviePosters/godzilla.jpg'),
     name: 'Godzilla : King of Monsters',
@@ -20,7 +18,7 @@ const App = () => {
   })
 
   const [youTubeVideo, setyouTubeVideo] = useState({
-    url: require('../components/images/moviePosters/godzilla.jpg'),
+    imageurl:require('../components/images/movies/spidermanbig.jpg'),
     name: 'Godzilla : King of Monsters',
     link: 'www',
 
@@ -160,8 +158,8 @@ const App = () => {
         </View>
 
         <ImageBackground
-          source={require('../components/images/movies/mutantsbig.jpg')}
-          style={{ height: 250, width: '100%', backgroundColor: '#000' }}
+          source={youTubeVideo.imageurl}
+          style={{ height: 250, width: '100%', backgroundColor: '#000' ,marginBottom:10}}
         >
           {/* <Text style={{ color: 'white', padding: 8 }}>{youTubeVideo.name}</Text> */}
           <TouchableOpacity style={{ ...styles.downloadIconContainer, position: 'absolute', top: '40%', right: '40%' }}>
