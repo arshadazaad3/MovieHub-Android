@@ -4,11 +4,24 @@ import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons'
 
 //Screens
 import Home from './screens/home'
 import Profile from './screens/profile'
+// import AdminPanel from './screens/adminPanel'
+import AdminPanel from './screens/adminPanel'
+
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -39,6 +52,16 @@ export default function App() {
             tabBarLabel: '',
             tabBarIcon: ({ color }) => (
               <MaterialIcons name='subject' color={color} size={28} />
+            )
+          }}
+        />
+        <Tab.Screen
+          name="Admin Panel"
+          component={AdminPanel}
+          options={{
+            tabBarLabel: '',
+            tabBarIcon: ({ color }) => (
+              <FontAwesome5 name='user-cog' color={color} size={22} style={{ top: 2 }} />
             )
           }}
         />

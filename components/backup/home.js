@@ -5,10 +5,11 @@ import {
 } from 'react-native';
 
 import Carousel from 'react-native-anchor-carousel'
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome5, Feather, MaterialIcons } from '@expo/vector-icons'
 import tempData from '../components/tempData'
 import * as firebaseConfig from '../components/Fire'
 import firebase from 'firebase'
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,7 +26,11 @@ export default class Home extends React.Component {
             desc: '',
             link: ''
         },
-
+        youTubeVideo: {
+            imageurl: require('../components/images/movies/spidermanbig.jpg'),
+            name: 'Godzilla : King of Monsters',
+            link: 'www',
+        },
         favorites: [],
 
         movieObject: {
@@ -35,14 +40,8 @@ export default class Home extends React.Component {
             title: '',
             stat: '',
             key: ''
-        },
-
-        youtube_Object: {
-            image: 'https://firebasestorage.googleapis.com/v0/b/moviehub-31aab.appspot.com/o/endgame.jpg?alt=media&token=f5cbd582-eb8b-40e3-8f6c-5321ec80b481',
-            name: '',
-            link: ''
-
         }
+
     }
 
     defaultMovie() {
@@ -58,35 +57,17 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
+
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig.firebaseConfig)
         }
         this.readMovies()
-        this.readYoutubeData()
 
     }
-
-    readYoutubeData = () => {
-        const rootRef = firebase.database().ref();
-        const post = rootRef.child('Youtube_trend').orderByKey();
-        post.on('value', snap => {
-            snap.forEach(child => {
-                this.setState({
-                    youtube_Object: {
-                        image: child.val().imageid,
-                        link: child.val().link,
-                        name: child.val().name,
-                    }
-                })
-            })
-        })
-    }
-
-
     readMovies = () => {
         const rootRef = firebase.database().ref();
         const post = rootRef.child('Movies').orderByKey();
-        post.on('value', snap => {
+        post.once('value', snap => {
             snap.forEach(child => {
                 this.setState({
                     movieObject: {
@@ -98,9 +79,7 @@ export default class Home extends React.Component {
                         key: child.val().key
                     }
                 })
-                if (!this.state.movies.includes(this.state.movieObject)) {
-                    this.state.movies.push(this.state.movieObject)
-                }
+                this.state.movies.push(this.state.movieObject)
             })
             this.setState({ loading: false })
             this.defaultMovie();
@@ -187,7 +166,7 @@ export default class Home extends React.Component {
                             marginVertical: 10
                         }}>
                             Top picks this week
-                        </Text>
+            </Text>
                         <View style={styles.carouselContainerView}>
                             <Carousel
                                 style={styles.Carousel}
@@ -233,7 +212,7 @@ export default class Home extends React.Component {
                 </View>
 
                 <ImageBackground
-                    source={{ uri: this.state.youtube_Object.image }}
+                    source={this.state.youTubeVideo.imageurl}
                     style={{ height: 250, width: '100%', backgroundColor: '#000', marginBottom: 10 }}
                 >
                     {/* <Text style={{ color: 'white', padding: 8 }}>{youTubeVideo.name}</Text> */}
