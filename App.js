@@ -25,6 +25,8 @@ console.warn = message => {
 
 const Tab = createMaterialBottomTabNavigator();
 
+
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -66,6 +68,7 @@ export default function App() {
           }}
         />
       </Tab.Navigator>
+
     </NavigationContainer>
   );
 }

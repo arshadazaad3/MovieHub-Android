@@ -9,6 +9,8 @@ import { FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import tempData from '../components/tempData'
 import * as firebaseConfig from '../components/Fire'
 import firebase from 'firebase'
+import { Snackbar } from 'react-native-paper';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -42,7 +44,10 @@ export default class Home extends React.Component {
             name: '',
             link: ''
 
-        }
+        },
+
+        snackbarVisible: false,
+        snackbarlabel: ''
     }
 
     defaultMovie() {
@@ -64,7 +69,16 @@ export default class Home extends React.Component {
         this.readMovies()
         this.readYoutubeData()
 
+
+
     }
+
+
+    componentWillUnmount() {
+        window.clearInterval(this.loading)
+    }
+
+
 
     readYoutubeData = () => {
         const rootRef = firebase.database().ref();
@@ -120,7 +134,7 @@ export default class Home extends React.Component {
     }
 
     downloadMovie = (link) => {
-        // Linking.openURL(link)
+        Linking.openURL(link)
         console.log(link)
     }
 
@@ -148,15 +162,26 @@ export default class Home extends React.Component {
                         onPress={() => {
                             if (this.state.favorites.includes(item)) {
                                 console.log('movie exists in favorites')
+                                this.setState({
+                                    snackbarlabel: 'Movie Already Added to favorites',
+                                    snackbarVisible: true
+                                })
                             }
                             else {
                                 this.state.favorites.push(item)
+                                this.setState({
+                                    snackbarlabel: 'Added to favorites',
+                                    snackbarVisible: true
+                                })
                                 console.log("Successfully added movie to favorites")
                             }
                         }}>
                         <MaterialIcons name='library-add' size={30} color='white' />
+
                     </TouchableOpacity>
+
                 </TouchableOpacity>
+
             </View>
         )
     }
@@ -170,102 +195,145 @@ export default class Home extends React.Component {
             )
         }
 
-        return (<ScrollView style={{ backgroundColor: "#000" }}>
-            <StatusBar hidden />
-            <View style={styles.carouselContentContainer}>
-                <View style={{ ...StyleSheet.absoluteFill, backgroundColor: '#000' }}>
-                    <ImageBackground
-                        source={{ uri: this.state.background.uri }}
-                        style={styles.imageBG}
-                        blurRadius={7}
-                    >
-                        <Text style={{
-                            fontSize: 24,
-                            color: 'white',
-                            fontWeight: 'bold',
-                            marginLeft: 10,
-                            marginVertical: 10
-                        }}>
-                            Top picks this week
+        if (this.state.movies.length < 1) {
+            console.log("Hello")
+            return (
+                <View style={styles.container}>
+                    <ActivityIndicator size="large" color={'#24A6D9'} />
+                </View>
+            )
+        }
+
+        return (
+
+            <ScrollView style={{ backgroundColor: "#000" }}>
+
+                <StatusBar hidden />
+
+
+                <View style={styles.carouselContentContainer}>
+
+                    <View style={{ ...StyleSheet.absoluteFill, backgroundColor: '#000' }}>
+
+                        <ImageBackground
+                            source={{ uri: this.state.background.uri }}
+                            style={styles.imageBG}
+                            blurRadius={7}
+                        >
+
+                            <Text style={{
+                                fontSize: 24,
+                                color: 'white',
+                                fontWeight: 'bold',
+                                marginLeft: 10,
+                                marginVertical: 10
+                            }}>
+                                Top picks this week
                         </Text>
-                        <View style={styles.carouselContainerView}>
-                            <Carousel
-                                style={styles.Carousel}
-                                data={this.state.movies}
-                                renderItem={this.renderItem}
-                                itemWidth={200}
-                                containeriwdth={width - 20}
-                                seperatorWidth={0}
-                                ref={(c) => {
-                                    this._carousel = c;
-                                }}
-                                inActiveOpacity={0.4}
-                                onScrollEnd={(item) => this.onScrollEndHanler(item)}
 
-                            />
-                        </View>
+                            <View style={styles.carouselContainerView}>
+                                <Carousel
+                                    style={styles.Carousel}
+                                    data={this.state.movies}
+                                    renderItem={this.renderItem}
+                                    itemWidth={200}
+                                    containeriwdth={width - 20}
+                                    seperatorWidth={0}
+                                    ref={(c) => {
+                                        this._carousel = c;
+                                    }}
+                                    inActiveOpacity={0.4}
+                                    onScrollEnd={(item) => this.onScrollEndHanler(item)}
 
-                        <View style={styles.movieInfoContainer}>
-                            <View style={{ justifyContent: "center", maxWidth: '80%' }}>
-                                <Text style={styles.movieName}>{this.state.background.name}</Text>
-                                <Text style={styles.movieStat}>{this.state.background.stat}</Text>
+                                />
+
+
                             </View>
-                            <TouchableOpacity
-                                style={styles.downloadIconContainer}
-                                onPress={() => this.downloadMovie(this.state.background.link)}
-                            >
-                                <MaterialIcons name='cloud-download' size={22} color="#02ad94" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ paddingHorizontal: 14, marginTop: 14 }}>
-                            <Text style={{ color: "white", opacity: 0.8, lineHeight: 20 }}>{this.state.background.desc}</Text>
-                        </View>
-                    </ImageBackground>
-                </View>
-            </View>
 
-            <View style={{ marginHorizontal: 14 }}>
-                <View style={styles.trendingContainer}>
-                    <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginBottom: 24, marginTop: 20 }}>
-                        Trending
+                            <View style={styles.movieInfoContainer}>
+                                <View style={{ justifyContent: "center", maxWidth: '80%' }}>
+                                    <Text style={styles.movieName}>{this.state.background.name}</Text>
+                                    <Text style={styles.movieStat}>{this.state.background.stat}</Text>
+
+
+                                </View>
+
+
+                                <TouchableOpacity
+                                    style={styles.downloadIconContainer}
+                                    onPress={() => this.downloadMovie(this.state.background.link)}
+                                >
+                                    <MaterialIcons name='cloud-download' size={22} color="#02ad94" />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={{ paddingHorizontal: 14, marginTop: 14 }}>
+                                <Text style={{ color: "white", opacity: 0.8, lineHeight: 20 }}>{this.state.background.desc}</Text>
+                                <Snackbar
+                                    visible={this.state.snackbarVisible}
+                                    // visible={true}
+                                    onDismiss={() => this.setState({ snackbarVisible: false })}
+                                    action={{
+                                        label: this.state.snackbarlabel,
+                                        onPress: () => {
+                                            this.setState({ snackbarVisible: false })
+                                        },
+                                        alignItems: 'left'
+                                    }}
+                                    duration={10000}
+                                    style={{ backgroundColor: "#3d5af1", width: '100%', height: 30, top: 50 }}
+                                />
+                            </View>
+
+                        </ImageBackground>
+                    </View>
+                </View>
+
+
+
+                <View style={{ marginHorizontal: 14 }}>
+                    <View style={styles.trendingContainer}>
+                        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginBottom: 24, marginTop: 20 }}>
+                            Trending
         </Text>
-                    <MaterialIcons name='trending-up' size={27} color="#02ad94" style={{ top: 22, left: 10 }} />
-                </View>
+                        <MaterialIcons name='trending-up' size={27} color="#02ad94" style={{ top: 22, left: 10 }} />
+                    </View>
 
-                <ImageBackground
-                    source={{ uri: this.state.youtube_Object.image }}
-                    style={{ height: 250, width: '100%', backgroundColor: '#000', marginBottom: 10 }}
-                >
-                    {/* <Text style={{ color: 'white', padding: 8 }}>{youTubeVideo.name}</Text> */}
-                    <TouchableOpacity style={{ ...styles.downloadIconContainer, position: 'absolute', top: '40%', right: '40%' }}>
-                        <MaterialIcons name='play-arrow' size={22} color="#02ad94" />
-                    </TouchableOpacity>
-                </ImageBackground>
-                <View style={styles.trendingContainer}>
-                    <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>
-                        Favorites
+                    <ImageBackground
+                        source={{ uri: this.state.youtube_Object.image }}
+                        style={{ height: 250, width: '100%', backgroundColor: '#000', marginBottom: 10 }}
+                    >
+                        {/* <Text style={{ color: 'white', padding: 8 }}>{youTubeVideo.name}</Text> */}
+                        <TouchableOpacity style={{ ...styles.downloadIconContainer, position: 'absolute', top: '40%', right: '40%' }}>
+                            <MaterialIcons name='play-arrow' size={22} color="#02ad94" />
+                        </TouchableOpacity>
+                    </ImageBackground>
+                    <View style={styles.trendingContainer}>
+                        <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>
+                            Favorites
                     </Text>
-                    <MaterialIcons name='favorite' size={27} color="#02ad94" style={{ top: 14, left: 10 }} />
+                        <MaterialIcons name='favorite' size={27} color="#02ad94" style={{ top: 14, left: 10 }} />
+                    </View>
+
+                    <FlatList
+                        style={{ marginBottom: 30, marginTop: 15 }}
+                        data={this.state.favorites}
+                        horizontal={true}
+                        renderItem={({ item }) => {
+                            return (
+                                <TouchableOpacity style={{ marginRight: 20 }}
+                                    onLongPress={() => {
+                                        this.state.favorites.pop(item)
+                                    }}>
+                                    <Image source={{ uri: item.image }} style={{ height: 300, width: 200 }} />
+                                    <View style={{ position: "absolute", height: 5, width: '100%', backgroundColor: '#02ad94' }}></View>
+                                    <FontAwesome5 name="play" size={38} color="#fff" style={{ position: "absolute", top: '45%', left: '45%', opacity: 0.8 }} />
+                                </TouchableOpacity>
+                            )
+                        }}
+                    />
                 </View>
-
-                <FlatList
-                    style={{ marginBottom: 30, marginTop: 15 }}
-                    data={this.state.favorites}
-                    horizontal={true}
-                    renderItem={({ item }) => {
-                        return (
-                            <TouchableOpacity style={{ marginRight: 20 }}>
-                                <Image source={{ uri: item.image }} style={{ height: 300, width: 200 }} />
-                                <View style={{ position: "absolute", height: 5, width: '100%', backgroundColor: '#02ad94' }}></View>
-                                <FontAwesome5 name="play" size={38} color="#fff" style={{ position: "absolute", top: '45%', left: '45%', opacity: 0.8 }} />
-                            </TouchableOpacity>
-
-                        )
-                    }}
-                />
-
-            </View>
-        </ScrollView>
+            </ScrollView>
         )
     }
 }
@@ -281,7 +349,7 @@ const styles = StyleSheet.create({
     carouselContentContainer: {
         flex: 1,
         backgroundColor: '#000',
-        height: 650,
+        height: 680,
         paddingHorizontal: 14,
     },
 
